@@ -6,11 +6,26 @@ name: codeql
 on:
   push:
     branches: [main]
+    paths:
+      - 'src/**/*.cs'
+      - 'src/**/*.ts'
+      - 'src/**/*.tsx'
+      - 'src/**/*.js'
+      - 'src/**/*.jsx'
+      - '.github/workflows/codeql.yml'
   pull_request:
     branches: [main]
-  schedule:
-    # wöchentlicher Vollscan
-    - cron: '17 5 * * 1'
+    paths:
+      - 'src/**/*.cs'
+      - 'src/**/*.ts'
+      - 'src/**/*.tsx'
+      - 'src/**/*.js'
+      - 'src/**/*.jsx'
+      - '.github/workflows/codeql.yml'
+  # Sprint 1: weekly full-scan re-aktivieren, sobald echter Quellcode existiert
+  # schedule:
+  #   - cron: '17 5 * * 1'
+  workflow_dispatch:
 
 permissions:
   contents: read
