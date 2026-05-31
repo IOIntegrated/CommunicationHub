@@ -1,7 +1,8 @@
 // =============================================================================
 // functions.bicep — Ingestion Functions (.NET 8 isolated)
 // Plandokument: ../../../docs/plan/07-ingestion-pipeline.md
-// dev/test: Consumption (Y1) — prod: Premium EP1
+// dev/test: Windows Consumption (Y1) — prod: Windows Premium EP1
+// Windows gewählt um Linux-Dynamic-Co-Location-Restriktion mit API Linux App Service Plan zu umgehen.
 // TODO Sprint 1.x: VNet-Integration, publicNetworkAccess = 'Disabled'
 // =============================================================================
 
@@ -40,6 +41,7 @@ resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   }
 }
 
+// Windows Plan: vermeidet Linux-Dynamic-Co-Location-Restriktion mit API Linux Plan im selben RG.
 resource plan 'Microsoft.Web/serverfarms@2023-12-01' = {
   name: planName
   location: location
@@ -55,7 +57,7 @@ resource plan 'Microsoft.Web/serverfarms@2023-12-01' = {
     tier: 'Dynamic'
   }
   properties: {
-    reserved: true // Linux
+    reserved: false // Windows
   }
 }
 
@@ -63,7 +65,7 @@ resource funcApp 'Microsoft.Web/sites@2023-12-01' = {
   name: funcAppName
   location: location
   tags: tags
-  kind: 'functionapp,linux'
+  kind: 'functionapp'
   identity: {
     type: 'SystemAssigned'
   }
@@ -71,7 +73,8 @@ resource funcApp 'Microsoft.Web/sites@2023-12-01' = {
     serverFarmId: plan.id
     httpsOnly: true
     siteConfig: {
-      linuxFxVersion: 'DOTNET-ISOLATED|8.0'
+      netFrameworkVersion: 'v8.0'
+      use32BitWorkerProcess: false
       minTlsVersion: '1.2'
       ftpsState: 'Disabled'
       http20Enabled: true
