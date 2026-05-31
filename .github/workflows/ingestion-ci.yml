@@ -45,4 +45,4 @@ jobs:
       # - run: dotnet test -c Release
 
       - name: Skeleton step (Sprint 0)
-        run: echo "TODO Sprint 1: dotnet restore && build && test für Functions; Deployment Zip via OIDC."
+        run: echo 'TODO Sprint 1 - dotnet restore + build + test for Functions; Deployment Zip via OIDC.'

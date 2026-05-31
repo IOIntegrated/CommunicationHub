@@ -46,7 +46,7 @@ jobs:
         run: az bicep build --file infra/bicep/main.bicep
       # TODO Sprint 1: alle Module bauen + Linter Strict-Mode
       - name: Skeleton lint
-        run: echo "TODO Sprint 1: PSRule.Rules.Azure / bicep lint --diagnostics-format sarif"
+        run: echo 'TODO Sprint 1 - PSRule.Rules.Azure / bicep lint --diagnostics-format sarif'
 
   what-if:
     name: Bicep what-if

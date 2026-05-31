@@ -44,7 +44,7 @@ jobs:
       #     global-json-file: src/backend/global.json
 
       - name: Skeleton step (Sprint 0)
-        run: echo "TODO Sprint 1: dotnet restore && dotnet build -c Release && dotnet test -c Release --collect:'XPlat Code Coverage'"
+        run: echo 'TODO Sprint 1 - dotnet restore + build -c Release + test -c Release with XPlat Code Coverage'
 
       # TODO Sprint 1: Coverage Upload, Container-Build (Docker buildx), Push in ACR via OIDC
       # - name: Azure login (OIDC)
