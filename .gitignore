@@ -61,6 +61,9 @@ rad.json
 *.bicep.bak
 .azure/
 *.parameters.local.json
+# Bicep build output (ARM)
+infra/bicep/**/*.json
+!infra/bicep/**/*.parameters.json
 
 # ---------- Secrets / Env ----------
 .env

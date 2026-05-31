@@ -1,5 +1,4 @@
-// Prod-Umgebung – Parameter-Skelett. Siehe ../main.bicep.
-// TODO Sprint 1: prod-spezifische Hardening-Parameter (CMK, PE, höhere SKUs).
+// Prod-Parameter. Siehe ../main.bicep.
 using '../main.bicep'
 
 param env = 'prod'
@@ -10,6 +9,6 @@ param tags = {
   env: 'prod'
   workload: 'communication-copilot'
   managedBy: 'bicep'
-  costCenter: 'TODO'
+  costCenter: 'production'
   dataClassification: 'confidential'
 }
