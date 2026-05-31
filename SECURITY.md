@@ -9,10 +9,12 @@
 Meldungen bitte vertraulich per E-Mail an:
 
 ```
-security@<TODO-placeholder-domain>
+security@iointegrated.com
 ```
 
-> TODO (Sprint 0): Endgültige Security-Mailadresse eintragen und Verantwortliche benennen.
+Verantwortliches Team: [@IOIntegrated/communicationhub-security](https://github.com/orgs/IOIntegrated/teams/communicationhub-security).
+
+> Bei besonders sensiblen Findings (z. B. aktive Datenabfluss-Risiken) bitte zusätzlich ein Mitglied des Teams direkt kontaktieren. Eine PGP-Verschlüsselungsoption wird in Sprint 1 ergänzt.
 
 Bitte enthalten:
 
