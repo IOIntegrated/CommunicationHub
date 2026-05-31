@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  Outlook Add-in Manifest – Skelett (MVP1 Sprint 0).
+  Plandokument: ../../docs/plan/04-outlook-addin.md
+  TODO Sprint 1:
+    - <Id>: GUID der registrierten Add-in-App in Entra ID (Pre-Authorized für Office)
+    - <ProviderName>, <DisplayName>, <Description>: finale Werte
+    - <IconUrl>, <HighResolutionIconUrl>, <SupportUrl>: HTTPS-URLs des Hosting-Targets
+    - <AppDomains>: Backend-/Hosting-Domains der Pilot-/Prod-Umgebung
+    - <Hosts>: Mailbox (MinVersion 1.10+ für Add-in-Commands & Event-Based Activation)
+    - <Permissions>: ReadWriteMailbox (für Compose-Insert)
+    - WebApplicationInfo / Scopes für SSO → Backend OBO
+  KEINE produktiven IDs oder URLs in dieses Skelett eintragen.
+-->
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+           xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0"
+           xsi:type="MailApp">
+
+    <!-- TODO: GUID nach Add-in-Registrierung eintragen -->
+    <Id>00000000-0000-0000-0000-000000000000</Id>
+    <Version>0.0.1</Version>
+    <ProviderName>TODO-Provider</ProviderName>
+    <DefaultLocale>de-DE</DefaultLocale>
+    <DisplayName DefaultValue="Customer Communication Copilot (TODO)" />
+    <Description DefaultValue="Side Panel mit Kundenkontext und Antwortvorschlag – kein Auto-Send. (Skelett)" />
+    <IconUrl DefaultValue="https://TODO/icon-32.png" />
+    <HighResolutionIconUrl DefaultValue="https://TODO/icon-80.png" />
+    <SupportUrl DefaultValue="https://TODO/support" />
+
+    <AppDomains>
+        <AppDomain>https://TODO-backend.example</AppDomain>
+    </AppDomains>
+
+    <Hosts>
+        <Host Name="Mailbox" />
+    </Hosts>
+    <Requirements>
+        <Sets>
+            <Set Name="Mailbox" MinVersion="1.10" />
+        </Sets>
+    </Requirements>
+
+    <FormSettings>
+        <Form xsi:type="ItemRead">
+            <DesktopSettings>
+                <SourceLocation DefaultValue="https://TODO-addin-host/taskpane.html" />
+                <RequestedHeight>450</RequestedHeight>
+            </DesktopSettings>
+        </Form>
+    </FormSettings>
+
+    <Permissions>ReadWriteMailbox</Permissions>
+    <Rule xsi:type="RuleCollection" Mode="Or">
+        <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read" />
+    </Rule>
+
+    <!-- TODO Sprint 1: VersionOverrides mit Ribbon-Commands, EventBased Activation, SSO/WebApplicationInfo -->
+</OfficeApp>

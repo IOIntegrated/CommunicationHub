@@ -1,0 +1,41 @@
+# BC Extension CI – AL Compile
+# Plandokument: ../../docs/plan/02-bc-data-model.md
+# TODO Sprint 1: Auf AL-Go for GitHub umsteigen
+#   https://github.com/microsoft/AL-Go
+# Status: Skelett (Sprint 0) – minimaler Marker-Job.
+
+name: bc-extension-ci
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/bc-extension/**'
+      - '.github/workflows/bc-extension-ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/bc-extension/**'
+      - '.github/workflows/bc-extension-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: bc-extension-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  al-compile:
+    name: AL Compile (Skeleton)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Skeleton step
+        shell: pwsh
+        run: |
+          Write-Host "TODO Sprint 1: AL-Go for GitHub Setup ausführen."
+          Write-Host "  - Run-Pipeline / Increment-Version / Deploy gemäß AL-Go Templates."
+          Write-Host "  - app.json id/publisher/idRanges müssen vorher gesetzt sein."

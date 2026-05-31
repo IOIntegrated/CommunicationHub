@@ -1,0 +1,19 @@
+<Project>
+  <!--
+    Skelett – wird in Sprint 1 ausgebaut. Globale MSBuild-Einstellungen für
+    alle .NET-Projekte unter src/backend.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <DeterministicSourcePaths>true</DeterministicSourcePaths>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <!-- TODO Sprint 1: Versionierung (MinVer/GitVersion), Source Link, Symbol-Packages. -->
+</Project>

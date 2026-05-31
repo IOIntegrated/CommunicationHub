@@ -1,0 +1,28 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+
+# .NET / AL
+[*.{cs,csx,vb,al,xml,csproj,props,targets,sln}]
+indent_size = 4
+
+# Web / Config
+[*.{ts,tsx,js,jsx,json,jsonc,yml,yaml,html,css,scss,md}]
+indent_size = 2
+
+# Bicep
+[*.{bicep,bicepparam}]
+indent_size = 2
+
+# Shell / PowerShell
+[*.{ps1,psm1,psd1,sh}]
+indent_size = 4
+
+# Markdown allows trailing whitespace for hard breaks
+[*.md]
+trim_trailing_whitespace = false

@@ -1,0 +1,48 @@
+# Ingestion CI – Azure Functions (.NET 8 isolated)
+# Plandokument: ../../docs/plan/07-ingestion-pipeline.md
+# Status: Skelett (Sprint 0)
+
+name: ingestion-ci
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/ingestion/**'
+      - '.github/workflows/ingestion-ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/ingestion/**'
+      - '.github/workflows/ingestion-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  security-events: write
+
+concurrency:
+  group: ingestion-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Build & Test (Functions)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/ingestion
+    steps:
+      - uses: actions/checkout@v4
+
+      # TODO Sprint 1:
+      # - uses: actions/setup-dotnet@v4
+      #   with:
+      #     global-json-file: src/backend/global.json   # gemeinsame SDK-Version
+      # - run: dotnet restore
+      # - run: dotnet build -c Release
+      # - run: dotnet test -c Release
+
+      - name: Skeleton step (Sprint 0)
+        run: echo "TODO Sprint 1: dotnet restore && build && test für Functions; Deployment Zip via OIDC."

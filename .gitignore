@@ -1,0 +1,85 @@
+# ---------- OS / Editor ----------
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ---------- VS / VS Code ----------
+.vs/
+# User-specific VS Code settings (shared settings should be committed explicitly per-folder if needed)
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+!.vscode/settings.shared.json
+
+# ---------- .NET ----------
+bin/
+obj/
+*.user
+*.userosscache
+*.suo
+*.pdb
+*.dll
+*.exe
+TestResults/
+coverage*
+*.coverage
+*.coveragexml
+*.trx
+.nuget/
+nuget.exe
+project.lock.json
+artifacts/
+
+# ---------- Node / TypeScript ----------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+dist/
+build/
+.next/
+.nuxt/
+.cache/
+.parcel-cache/
+.eslintcache
+*.tsbuildinfo
+
+# ---------- AL / BC ----------
+*.app
+.alpackages/
+.snapshots/
+.altestrunner/
+.alcache/
+rad.json
+.netpackages/
+
+# ---------- Bicep / Azure ----------
+*.bicep.bak
+.azure/
+*.parameters.local.json
+
+# ---------- Secrets / Env ----------
+.env
+.env.*
+!.env.example
+*.pfx
+*.cer
+*.pem
+*.key
+secrets.json
+appsettings.Development.json
+appsettings.Local.json
+**/secrets/**
+
+# ---------- Logs ----------
+*.log
+logs/
+
+# ---------- Tooling output ----------
+.tmp/
+.temp/
+.scratch/

@@ -1,0 +1,73 @@
+# Infra Validate – Bicep build + what-if (OIDC)
+# Plandokument: ../../docs/plan/19-repo-scaffolding.md §4
+# Status: Skelett (Sprint 0)
+
+name: infra-validate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'infra/**'
+      - '.github/workflows/infra-validate.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'infra/**'
+      - '.github/workflows/infra-validate.yml'
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Zielumgebung für what-if'
+        required: true
+        default: 'dev'
+        type: choice
+        options: [dev, test, prod]
+
+permissions:
+  contents: read
+  # OIDC Federated Identity – kein Secret in GH Secrets nötig:
+  id-token: write
+  pull-requests: write
+
+concurrency:
+  group: infra-validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bicep-build:
+    name: Bicep build + lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Bicep
+        run: az bicep install
+      - name: Bicep build (main)
+        run: az bicep build --file infra/bicep/main.bicep
+      # TODO Sprint 1: alle Module bauen + Linter Strict-Mode
+      - name: Skeleton lint
+        run: echo "TODO Sprint 1: PSRule.Rules.Azure / bicep lint --diagnostics-format sarif"
+
+  what-if:
+    name: Bicep what-if
+    runs-on: ubuntu-latest
+    needs: bicep-build
+    if: github.event_name == 'workflow_dispatch'
+    environment: ${{ inputs.env }}   # TODO Sprint 1: GitHub-Environments mit Federated-Identity-Reviewern
+    steps:
+      - uses: actions/checkout@v4
+
+      # TODO Sprint 1: OIDC Azure Login
+      # - uses: azure/login@v2
+      #   with:
+      #     client-id: ${{ vars.AZURE_CLIENT_ID }}
+      #     tenant-id: ${{ vars.AZURE_TENANT_ID }}
+      #     subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Skeleton what-if
+        run: |
+          echo "TODO Sprint 1:"
+          echo "  az deployment sub what-if \\"
+          echo "    --location swedencentral \\"
+          echo "    --template-file infra/bicep/main.bicep \\"
+          echo "    --parameters infra/bicep/parameters/${{ inputs.env }}.bicepparam"

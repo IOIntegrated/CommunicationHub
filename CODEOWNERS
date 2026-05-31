@@ -1,0 +1,27 @@
+# CODEOWNERS – Customer Communication Copilot
+#
+# Owners use individual handles for now; replace with dedicated
+# @IOIntegrated/* teams once they are created in the org.
+#
+# Reihenfolge: spezifischere Regeln zuletzt (überschreiben frühere).
+
+# Default
+*                                   @t-marquardt
+
+# Repo-/CI-Infrastruktur
+/.github/                           @t-marquardt
+/infra/                             @t-marquardt
+/scripts/                           @t-marquardt
+
+# Dokumentation
+/docs/                              @t-marquardt
+/docs/plan/12-security-compliance.md @t-marquardt
+/SECURITY.md                        @t-marquardt
+
+# Komponenten
+/src/bc-extension/                  @t-marquardt
+/src/backend/                       @t-marquardt
+/src/ingestion/                     @t-marquardt
+/src/ai-orchestrator/               @t-marquardt
+/src/outlook-addin/                 @t-marquardt
+/src/teams-app/                     @t-marquardt

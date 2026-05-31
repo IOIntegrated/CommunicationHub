@@ -1,0 +1,21 @@
+{
+  "//": "Skelett – wird in MVP2 mit Teams Toolkit / Bot Framework Setup ausgebaut.",
+  "name": "@communicationhub/teams-app",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Customer Communication Copilot – Teams App (Sprint 0 Skelett).",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "dev": "echo \"TODO MVP2: teams toolkit dev\" && exit 0",
+    "build": "echo \"TODO MVP2: build bot+tab\" && exit 0",
+    "test": "echo \"TODO MVP2: vitest run\" && exit 0",
+    "lint": "echo \"TODO MVP2: eslint .\" && exit 0",
+    "validate-manifest": "echo \"TODO MVP2: teamsfx manifest validate\" && exit 0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

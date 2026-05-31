@@ -1,0 +1,57 @@
+# Outlook Add-in CI
+# Plandokument: ../../docs/plan/04-outlook-addin.md
+# Status: Skelett (Sprint 0)
+
+name: outlook-addin-ci
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/outlook-addin/**'
+      - '.github/workflows/outlook-addin-ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/outlook-addin/**'
+      - '.github/workflows/outlook-addin-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: outlook-addin-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Lint, Build, Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/outlook-addin
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          # TODO Sprint 1: cache: 'pnpm'
+
+      # TODO Sprint 1:
+      # - uses: pnpm/action-setup@v4
+      #   with: { version: 9 }
+      # - run: pnpm install --frozen-lockfile
+      # - run: pnpm lint
+      # - run: pnpm build
+      # - run: pnpm test
+      # - run: pnpm validate-manifest
+
+      - name: Skeleton step (Sprint 0)
+        run: |
+          npm run lint --if-present
+          npm run build --if-present
+          npm test --if-present
+          npm run validate-manifest --if-present

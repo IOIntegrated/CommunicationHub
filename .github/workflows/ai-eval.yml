@@ -1,0 +1,60 @@
+# AI Eval – manuell triggerbar, ruft Eval-Runner für Capabilities C1–C8
+# Plandokument: ../../docs/plan/08-ai-orchestration.md, ../../docs/plan/16-testing-acceptance.md §6
+# Status: Skelett (Sprint 0)
+
+name: ai-eval
+
+on:
+  workflow_dispatch:
+    inputs:
+      capability:
+        description: 'Capability (C1–C8 oder "all")'
+        required: true
+        default: 'all'
+        type: string
+      dataset:
+        description: 'Dataset-Pfad (rel. zu src/ai-orchestrator/eval/datasets/)'
+        required: false
+        default: ''
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/ai-orchestrator/prompts/**'
+      - 'src/ai-orchestrator/eval/**'
+      - '.github/workflows/ai-eval.yml'
+
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+
+concurrency:
+  group: ai-eval-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eval:
+    name: Run Eval Suite
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/ai-orchestrator
+    # TODO Sprint 1: environment: ai-eval (mit Reviewer-Gate für prod-Modelle)
+    steps:
+      - uses: actions/checkout@v4
+
+      # TODO Sprint 1: OIDC Azure Login → Azure OpenAI mit Managed Identity
+      # - uses: azure/login@v2
+      #   with:
+      #     client-id: ${{ vars.AZURE_CLIENT_ID }}
+      #     tenant-id: ${{ vars.AZURE_TENANT_ID }}
+      #     subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Skeleton eval
+        run: |
+          echo "TODO Sprint 1: eval/runners/run.py --capability ${{ inputs.capability || 'all' }}"
+          echo "Erwartete Schwellen MVP1:"
+          echo "  C1 Accuracy >= 0.80"
+          echo "  C2 F1 >= 0.80"
+          echo "  C3 Faithfulness >= 0.95"
+          echo "  C4 Coverage >= 0.90"

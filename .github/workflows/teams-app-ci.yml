@@ -1,0 +1,49 @@
+# Teams App CI
+# Plandokument: ../../docs/plan/05-teams-app.md
+# Status: Skelett (Sprint 0) – Build ab MVP2.
+
+name: teams-app-ci
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/teams-app/**'
+      - '.github/workflows/teams-app-ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/teams-app/**'
+      - '.github/workflows/teams-app-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: teams-app-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Lint, Build, Test, Validate Manifest
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/teams-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # TODO MVP2: Teams Toolkit / pnpm install / build bot+tab / teamsfx manifest validate
+
+      - name: Skeleton step (Sprint 0)
+        run: |
+          npm run lint --if-present
+          npm run build --if-present
+          npm test --if-present
+          npm run validate-manifest --if-present

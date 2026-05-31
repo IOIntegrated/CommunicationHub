@@ -1,0 +1,25 @@
+{
+  "//": "Skelett – wird in Sprint 1 ausgebaut. Siehe docs/plan/07-ingestion-pipeline.md.",
+  "version": "2.0",
+  "logging": {
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "excludedTypes": "Request"
+      }
+    },
+    "logLevel": {
+      "default": "Information",
+      "Function": "Information",
+      "Host.Aggregator": "Trace"
+    }
+  },
+  "extensionBundle": {
+    "id": "Microsoft.Azure.Functions.ExtensionBundle",
+    "version": "[4.*, 5.0.0)"
+  },
+  "functionTimeout": "00:10:00",
+  "extensions": {
+    "//": "TODO Sprint 1: serviceBus { sessionHandlerOptions }, http { routePrefix } konfigurieren"
+  }
+}

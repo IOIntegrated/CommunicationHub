@@ -1,0 +1,21 @@
+{
+  "//": "Skelett – wird in Sprint 1 mit React/Office.js Setup ausgebaut.",
+  "name": "@communicationhub/outlook-addin",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Customer Communication Copilot – Outlook Add-in (MVP1 Sprint 0 Skelett).",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "dev": "echo \"TODO Sprint 1: yo-office / vite serve\" && exit 0",
+    "build": "echo \"TODO Sprint 1: vite build / webpack\" && exit 0",
+    "test": "echo \"TODO Sprint 1: vitest run\" && exit 0",
+    "lint": "echo \"TODO Sprint 1: eslint .\" && exit 0",
+    "validate-manifest": "echo \"TODO Sprint 1: office-addin-manifest validate manifest.xml\" && exit 0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

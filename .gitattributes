@@ -1,0 +1,35 @@
+# Default behaviour: normalize line endings to LF on commit
+* text=auto eol=lf
+
+# Explicit text formats
+*.cs        text eol=lf diff=csharp
+*.al        text eol=lf
+*.ts        text eol=lf
+*.tsx       text eol=lf
+*.js        text eol=lf
+*.json      text eol=lf
+*.jsonc     text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.md        text eol=lf
+*.bicep     text eol=lf
+*.bicepparam text eol=lf
+*.xml       text eol=lf
+*.ps1       text eol=lf
+*.sh        text eol=lf
+
+# Windows-specific scripts keep CRLF
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+
+# Binary formats
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.pdf       binary
+*.zip       binary
+*.app       binary
+*.pfx       binary
+*.cer       binary

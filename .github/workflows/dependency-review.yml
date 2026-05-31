@@ -1,0 +1,29 @@
+# Dependency Review – blockt PRs mit verwundbaren oder lizenz-inkompatiblen Deps
+# Doku: https://docs.github.com/code-security/supply-chain-security/understanding-your-software-supply-chain/about-dependency-review
+
+name: dependency-review
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: dependency-review-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+          comment-summary-in-pr: on-failure
+          # TODO Sprint 1: license-check (allow-/deny-list) sobald Lizenzwahl getroffen
+          # allow-licenses: MIT, Apache-2.0, BSD-3-Clause

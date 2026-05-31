@@ -1,0 +1,62 @@
+{
+  "//": "Teams App Manifest – Skelett (MVP1 Sprint 0). Plandokument: ../../../docs/plan/05-teams-app.md",
+  "//todo": [
+    "id: GUID des Teams-App-Eintrags (NICHT mit Entra-App-ID verwechseln)",
+    "developer.*: finale Werte (Name, Website, Privacy, Terms)",
+    "icons: color.png und outline.png hinzufügen",
+    "name/description: finale Werte für Pilot/Prod",
+    "webApplicationInfo.id: Entra-App-ID des Backend (Audience für SSO)",
+    "webApplicationInfo.resource: api://<backend-host>/<entra-app-id>",
+    "validDomains: Pilot-/Prod-Hosts des Tab/Backend",
+    "bots/composeExtensions/staticTabs: Sprint 1/MVP2 ausbauen",
+    "authorization.permissions.resourceSpecific: ChannelMessage.Read.Group, ChatMessage.Read.Chat (siehe 12-security §3.1)"
+  ],
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.17/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.17",
+  "version": "0.0.1",
+  "id": "00000000-0000-0000-0000-000000000000",
+  "packageName": "com.todo.communicationhub.teams",
+  "developer": {
+    "name": "TODO-Provider",
+    "websiteUrl": "https://TODO/",
+    "privacyUrl": "https://TODO/privacy",
+    "termsOfUseUrl": "https://TODO/terms"
+  },
+  "icons": {
+    "color": "color.png",
+    "outline": "outline.png"
+  },
+  "name": {
+    "short": "Comm Copilot (TODO)",
+    "full": "Customer Communication Copilot (TODO)"
+  },
+  "description": {
+    "short": "Kontext + Antwortvorschlag in Teams – kein Auto-Post.",
+    "full": "Customer Communication Copilot Teams App – Skelett MVP1 Sprint 0. Bot, Message Extension und Tab folgen in MVP2."
+  },
+  "accentColor": "#0078D4",
+  "bots": [],
+  "composeExtensions": [],
+  "staticTabs": [],
+  "configurableTabs": [],
+  "permissions": ["identity", "messageTeamMembers"],
+  "validDomains": ["TODO-tab.example", "TODO-backend.example"],
+  "webApplicationInfo": {
+    "id": "00000000-0000-0000-0000-000000000000",
+    "resource": "api://TODO-backend.example/00000000-0000-0000-0000-000000000000"
+  },
+  "authorization": {
+    "permissions": {
+      "resourceSpecific": [
+        {
+          "type": "Application",
+          "name": "ChannelMessage.Read.Group"
+        },
+        {
+          "type": "Delegated",
+          "name": "ChannelMessage.Read.Group"
+        }
+      ]
+    }
+  }
+}

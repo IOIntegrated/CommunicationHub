@@ -1,0 +1,5 @@
+{
+    "// TODO Sprint 1": "AL launch configuration für BC SaaS Sandbox ergänzen. Siehe https://learn.microsoft.com/dynamics365/business-central/dev-itpro/developer/devenv-running-extensions",
+    "version": "0.2.0",
+    "configurations": []
+}

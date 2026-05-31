@@ -1,0 +1,55 @@
+# Backend CI – Communication Copilot Service (.NET 8)
+# Plandokument: ../../docs/plan/19-repo-scaffolding.md §4
+# Status: Skelett (Sprint 0) – ruft noch keinen echten Build aus.
+
+name: backend-ci
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/backend/**'
+      - '.github/workflows/backend-ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/backend/**'
+      - '.github/workflows/backend-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  # OIDC Federated Identity gegen Azure (kein Client-Secret in GH Secrets):
+  id-token: write
+  # CodeQL/Security-Uploads (falls aktiviert):
+  security-events: write
+
+concurrency:
+  group: backend-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/backend
+    steps:
+      - uses: actions/checkout@v4
+
+      # TODO Sprint 1: Setup .NET aus global.json
+      # - uses: actions/setup-dotnet@v4
+      #   with:
+      #     global-json-file: src/backend/global.json
+
+      - name: Skeleton step (Sprint 0)
+        run: echo "TODO Sprint 1: dotnet restore && dotnet build -c Release && dotnet test -c Release --collect:'XPlat Code Coverage'"
+
+      # TODO Sprint 1: Coverage Upload, Container-Build (Docker buildx), Push in ACR via OIDC
+      # - name: Azure login (OIDC)
+      #   uses: azure/login@v2
+      #   with:
+      #     client-id: ${{ vars.AZURE_CLIENT_ID }}
+      #     tenant-id: ${{ vars.AZURE_TENANT_ID }}
+      #     subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}

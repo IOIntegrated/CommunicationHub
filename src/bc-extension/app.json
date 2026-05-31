@@ -1,0 +1,35 @@
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "name": "Customer Communication Copilot",
+    "publisher":  "IO Integrated",
+  "version": "0.0.1.0",
+  "brief": "Kundenkommunikations-Copilot für Business Central (MVP1 Sprint 0 – Skelett).",
+  "description": "TODO – Beschreibung gemäß AppSource-Anforderungen ergänzen. Siehe docs/plan/02-bc-data-model.md.",
+    "privacyStatement":  "https://ioi.gmbh/datenschutzerklaerung/",
+    "EULA":  "https://ioi.gmbh/wp-content/uploads/2024/07/agb.pdf",
+    "help":  "https://ioi.gmbh/kontakt",
+    "url":  "https://ioi.gmbh",
+  "logo": "",
+  "dependencies": [],
+  "screenshots": [],
+  "platform": "24.0.0.0",
+  "application": "24.0.0.0",
+  "idRanges": [
+    {
+      "from": 72359624,
+      "to": 72359674
+    }
+  ],
+  "contextSensitiveHelpUrl": "",
+  "showMyCode": false,
+  "runtime": "13.0",
+  "features": [
+    "TranslationFile",
+    "NoImplicitWith"
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": false,
+    "allowDownloadingSource": false,
+    "includeSourceInSymbolFile": false
+  }
+}
