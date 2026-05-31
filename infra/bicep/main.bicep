@@ -1,31 +1,23 @@
 // =============================================================================
-// main.bicep – Customer Communication Copilot, Top-Level-Deployment (Skelett)
+// main.bicep — Customer Communication Copilot, RG-Deployment
 // Plandokument: ../../docs/plan/01-architecture.md
-// Status: MVP1 Sprint 0 – nur Skelett. Module sind angelegt, aber ohne Inhalt.
 // =============================================================================
 
 targetScope = 'resourceGroup'
 
-@description('Umgebungs-Slug, z. B. dev | test | prod.')
-@allowed([
-  'dev'
-  'test'
-  'prod'
-])
+@description('Umgebungs-Slug.')
+@allowed(['dev', 'test', 'prod'])
 param env string
 
 @description('Azure-Region. Default Sweden Central (EU Data Boundary, AOAI verfügbar).')
 param location string = 'swedencentral'
 
-@description('Entra-ID-Tenant für die zu deployende Umgebung.')
-param tenantId string = subscription().tenantId
-
-@description('Globales Namens-Präfix für alle Ressourcen, z. B. "cch".')
+@description('Globales Namens-Präfix für alle Ressourcen.')
 @minLength(2)
 @maxLength(6)
 param namePrefix string = 'cch'
 
-@description('Gemeinsame Tags für alle Ressourcen.')
+@description('Gemeinsame Tags.')
 param tags object = {
   env: env
   workload: 'communication-copilot'
@@ -33,30 +25,125 @@ param tags object = {
 }
 
 // -----------------------------------------------------------------------------
-// TODO Sprint 1: Module-Aufrufe aktivieren, sobald die einzelnen Module
-// implementiert sind. Reihenfolge / Abhängigkeiten:
-//
-//   1. Log Analytics (inkl. dediziertem Audit-Workspace) – wird von allen
-//      anderen Modulen für Diagnostic Settings referenziert.
-//   2. Key Vault – Secrets/Certs für AOAI, SB-Cert, BC-OAuth, Graph-Cert.
-//   3. Service Bus – Topics ingest.raw / ingest.normalized / ingest.failed.
-//   4. AI Search – Indizes interactions, bc-master, bc-documents, summaries,
-//      transcripts (Schema kommt aus Backend-Repo).
-//   5. Azure OpenAI – Account + Deployments (chat, embeddings).
-//   6. Functions (Premium EP1) – Ingestion Receiver + Worker.
-//   7. App Service (Linux Container) – Copilot API.
-//
-// Beispiel (auskommentiert):
-//
-// module law 'modules/loganalytics.bicep' = {
-//   name: '${namePrefix}-law-${env}'
-//   params: {
-//     location: location
-//     namePrefix: namePrefix
-//     env: env
-//     tags: tags
-//   }
-// }
+// 1. Log Analytics + App Insights (vorab — alle anderen Module hängen am LAW)
 // -----------------------------------------------------------------------------
+module law 'modules/loganalytics.bicep' = {
+  name: 'law'
+  params: {
+    namePrefix: namePrefix
+    env: env
+    location: location
+    tags: tags
+  }
+}
 
-output deploymentNote string = 'Skelett-Deployment – keine Ressourcen erzeugt. Tenant=${tenantId}, Env=${env}, Region=${location}.'
+// -----------------------------------------------------------------------------
+// 2. Key Vault
+// -----------------------------------------------------------------------------
+module kv 'modules/keyvault.bicep' = {
+  name: 'kv'
+  params: {
+    namePrefix: namePrefix
+    env: env
+    location: location
+    tags: tags
+    auditWorkspaceId: law.outputs.lawAuditId
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 3. Service Bus + Topics
+// -----------------------------------------------------------------------------
+module sb 'modules/servicebus.bicep' = {
+  name: 'sb'
+  params: {
+    namePrefix: namePrefix
+    env: env
+    location: location
+    tags: tags
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 4. AI Search
+// -----------------------------------------------------------------------------
+module srch 'modules/aisearch.bicep' = {
+  name: 'srch'
+  params: {
+    namePrefix: namePrefix
+    env: env
+    location: location
+    tags: tags
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 5. Azure OpenAI (Account ohne Deployments — Quota separat anfragen)
+// -----------------------------------------------------------------------------
+module aoai 'modules/aoai.bicep' = {
+  name: 'aoai'
+  params: {
+    namePrefix: namePrefix
+    env: env
+    location: location
+    tags: tags
+    auditWorkspaceId: law.outputs.lawAuditId
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 6. Ingestion Functions
+// -----------------------------------------------------------------------------
+module func 'modules/functions.bicep' = {
+  name: 'func'
+  params: {
+    namePrefix: namePrefix
+    env: env
+    location: location
+    tags: tags
+    appInsightsConnectionString: law.outputs.appInsightsConnectionString
+    lawOpsId: law.outputs.lawOpsId
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 7. Copilot API (App Service)
+// -----------------------------------------------------------------------------
+module api 'modules/appservice.bicep' = {
+  name: 'api'
+  params: {
+    namePrefix: namePrefix
+    env: env
+    location: location
+    tags: tags
+    appInsightsConnectionString: law.outputs.appInsightsConnectionString
+    lawOpsId: law.outputs.lawOpsId
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 8. RBAC zwischen MIs und Datenservices
+// -----------------------------------------------------------------------------
+module rbac 'modules/rbac.bicep' = {
+  name: 'rbac'
+  params: {
+    keyVaultName: kv.outputs.name
+    serviceBusName: sb.outputs.namespace
+    searchName: srch.outputs.name
+    aoaiName: aoai.outputs.name
+    apiPrincipalId: api.outputs.principalId
+    funcPrincipalId: func.outputs.principalId
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Outputs
+// -----------------------------------------------------------------------------
+output appInsightsConnectionString string = law.outputs.appInsightsConnectionString
+output keyVaultName string = kv.outputs.name
+output keyVaultUri string = kv.outputs.uri
+output serviceBusNamespace string = sb.outputs.namespace
+output searchEndpoint string = srch.outputs.endpoint
+output aoaiEndpoint string = aoai.outputs.endpoint
+output apiHostName string = api.outputs.defaultHostName
+output functionAppName string = func.outputs.name

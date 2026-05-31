@@ -1,4 +1,4 @@
-// Test-Umgebung – Parameter-Skelett. Siehe ../main.bicep.
+// Test-Parameter. Siehe ../main.bicep.
 using '../main.bicep'
 
 param env = 'test'
@@ -9,6 +9,6 @@ param tags = {
   env: 'test'
   workload: 'communication-copilot'
   managedBy: 'bicep'
-  costCenter: 'TODO'
+  costCenter: 'rd-internal'
   dataClassification: 'internal'
 }
