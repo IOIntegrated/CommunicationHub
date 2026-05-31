@@ -1,27 +1,24 @@
 # CODEOWNERS – Customer Communication Copilot
 #
-# Owners use individual handles for now; replace with dedicated
-# @IOIntegrated/* teams once they are created in the org.
-#
 # Reihenfolge: spezifischere Regeln zuletzt (überschreiben frühere).
 
 # Default
-*                                   @t-marquardt
+*                                   @IOIntegrated/communicationhub-maintainers
 
 # Repo-/CI-Infrastruktur
-/.github/                           @t-marquardt
-/infra/                             @t-marquardt
-/scripts/                           @t-marquardt
+/.github/                           @IOIntegrated/communicationhub-devops
+/infra/                             @IOIntegrated/communicationhub-devops
+/scripts/                           @IOIntegrated/communicationhub-devops
 
 # Dokumentation
-/docs/                              @t-marquardt
-/docs/plan/12-security-compliance.md @t-marquardt
-/SECURITY.md                        @t-marquardt
+/docs/                              @IOIntegrated/communicationhub-maintainers
+/docs/plan/12-security-compliance.md @IOIntegrated/communicationhub-maintainers
+/SECURITY.md                        @IOIntegrated/communicationhub-maintainers
 
 # Komponenten
-/src/bc-extension/                  @t-marquardt
-/src/backend/                       @t-marquardt
-/src/ingestion/                     @t-marquardt
-/src/ai-orchestrator/               @t-marquardt
-/src/outlook-addin/                 @t-marquardt
-/src/teams-app/                     @t-marquardt
+/src/bc-extension/                  @IOIntegrated/communicationhub-bc
+/src/backend/                       @IOIntegrated/communicationhub-backend
+/src/ingestion/                     @IOIntegrated/communicationhub-backend
+/src/ai-orchestrator/               @IOIntegrated/communicationhub-ai
+/src/outlook-addin/                 @IOIntegrated/communicationhub-frontend
+/src/teams-app/                     @IOIntegrated/communicationhub-frontend
