@@ -6,11 +6,24 @@ name: codeql
 on:
   push:
     branches: [main]
+    paths:
+      - 'src/**/*.cs'
+      - 'src/**/*.ts'
+      - 'src/**/*.tsx'
+      - 'src/**/*.js'
+      - 'src/**/*.jsx'
   pull_request:
     branches: [main]
-  schedule:
-    # wöchentlicher Vollscan
-    - cron: '17 5 * * 1'
+    paths:
+      - 'src/**/*.cs'
+      - 'src/**/*.ts'
+      - 'src/**/*.tsx'
+      - 'src/**/*.js'
+      - 'src/**/*.jsx'
+  # Sprint 1: weekly full-scan re-aktivieren, sobald echter Quellcode existiert
+  # schedule:
+  #   - cron: '17 5 * * 1'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -28,7 +41,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['javascript-typescript', 'csharp']
+        include:
+          # Sprint 0: nur Quellanalyse, keine Builds erforderlich (Skeleton-Repo).
+          # Sprint 1: csharp ergänzen, sobald .csproj/.sln vorhanden sind, dann build-mode: autobuild.
+          - language: javascript-typescript
+            build-mode: none
+          - language: csharp
+            build-mode: none
     steps:
       - uses: actions/checkout@v4
 
@@ -36,11 +55,8 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
           # TODO Sprint 1: queries: 'security-extended,security-and-quality'
-
-      # TODO Sprint 1: Für C# evtl. setup-dotnet + dotnet build vor "analyze"
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
