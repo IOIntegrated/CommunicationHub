@@ -55,6 +55,10 @@
         {
           "type": "Delegated",
           "name": "ChannelMessage.Read.Group"
+        },
+        {
+          "type": "Delegated",
+          "name": "ChatMessage.Read.Chat"
         }
       ]
     }

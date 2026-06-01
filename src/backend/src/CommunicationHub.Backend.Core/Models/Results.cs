@@ -114,3 +114,11 @@ public sealed class InteractionSaveResult
     public required string InteractionId { get; init; }
     public required string BcEntryNo { get; init; }
 }
+
+/// <summary>Response for POST /v1/teams/message/preview-interaction.</summary>
+public sealed class TeamsInteractionPreviewResult
+{
+    public required MailAnalysisResult Analysis { get; init; }
+    public CustomerContextResult? CustomerContext { get; init; }
+    public required InteractionSaveRequest SuggestedSaveRequest { get; init; }
+}

@@ -31,6 +31,12 @@ public static class InteractionEndpoints
         if (string.IsNullOrWhiteSpace(request.MessageId))
             return Results.BadRequest(new { error = "message_id_required" });
 
+        if (request.SourceChannel.StartsWith("Teams", StringComparison.OrdinalIgnoreCase)
+            && string.IsNullOrWhiteSpace(request.ChatId))
+        {
+            return Results.BadRequest(new { error = "chat_id_required_for_teams" });
+        }
+
         var tenantCtx = ctx.RequireTenantContext();
 
         var result = await bcClient.SaveInteractionAsync(tenantCtx, request, ct);

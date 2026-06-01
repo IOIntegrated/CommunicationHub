@@ -128,6 +128,92 @@ public sealed partial class CopilotOrchestrator(
         return result;
     }
 
+    public async Task<MailAnalysisResult> AnalyzeTeamsMessageAsync(
+        TenantContext ctx,
+        TeamsMessageAnalysisRequest request,
+        CancellationToken ct = default)
+    {
+        var sw = Stopwatch.StartNew();
+        var analysisId = Guid.NewGuid().ToString();
+
+        LogStartAnalysis(logger, analysisId, ctx.TenantId);
+
+        var teamsMessage = new GraphMailMessage
+        {
+            Id = request.MessageId,
+            Subject = $"Teams message {request.ChatId}",
+            BodyPreview = request.MessageText,
+            ConversationId = request.ChatId,
+            SenderEmail = request.SenderUpn ?? string.Empty,
+            RecipientEmails = request.ParticipantUpns
+                .Where(p => !string.IsNullOrWhiteSpace(p))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            HasAttachments = false,
+        };
+
+        var kernel = kernelFactory.CreateKernel(ctx, searchClient, bcClient);
+
+        var injectionDetected = await RunInjectionCheckAsync(kernel, request.MessageText, ct);
+        if (injectionDetected)
+        {
+            LogInjectionDetected(logger, ctx.CorrelationId);
+        }
+
+        var classification = await RunClassificationAsync(kernel, teamsMessage, ct);
+        classification = new ClassificationResult
+        {
+            IsExternal = classification.IsExternal,
+            Confidence = classification.Confidence,
+            Sensitivity = classification.Sensitivity,
+            Channel = "Teams",
+        };
+
+        var sources = await searchClient.SearchInteractionsAsync(
+            ctx,
+            $"{request.ChatId} {request.MessageText}",
+            topK: 8,
+            ct);
+
+        var extraction = await RunExtractionAsync(kernel, teamsMessage, ct);
+
+        var sender = request.SenderUpn ?? string.Empty;
+        var matchCandidates = request.IncludeSuggestions && !string.IsNullOrEmpty(sender)
+            ? await bcClient.SuggestCustomerMatchAsync(ctx, sender, request.ParticipantUpns, ct)
+            : [];
+
+        ReplySuggestion? reply = null;
+        if (request.IncludeSuggestions && !injectionDetected)
+        {
+            reply = await RunReplySuggestionAsync(kernel, teamsMessage, sources, ct);
+        }
+
+        sw.Stop();
+
+        var result = new MailAnalysisResult
+        {
+            AnalysisId = analysisId,
+            Classification = classification,
+            Extraction = extraction,
+            CustomerMatch = matchCandidates.Count > 0
+                ? new CustomerMatchResult { Candidates = matchCandidates }
+                : null,
+            ReplySuggestion = reply,
+            Sources = sources,
+            PromptInjectionWarning = injectionDetected,
+            Audit = new AuditInfo
+            {
+                DecisionId = analysisId,
+                ModelDeployment = options.Value.ChatDeployment,
+                TokenCount = 0,
+                LatencyMs = (int)sw.ElapsedMilliseconds,
+            },
+        };
+
+        LogAnalysisComplete(logger, analysisId, sw.ElapsedMilliseconds);
+        return result;
+    }
+
     // ── C7: Injection check ───────────────────────────────────────────────────
 
     private static async Task<bool> RunInjectionCheckAsync(Kernel kernel, string content, CancellationToken ct)

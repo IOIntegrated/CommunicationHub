@@ -13,4 +13,13 @@ public interface ICopilotOrchestrator
         TenantContext ctx,
         MailAnalysisRequest request,
         CancellationToken ct = default);
+
+    /// <summary>
+    /// Run the Teams message analysis pipeline used by Message Extension / Bot.
+    /// This mirrors mail analysis capabilities while keeping channel semantics as Teams.
+    /// </summary>
+    Task<MailAnalysisResult> AnalyzeTeamsMessageAsync(
+        TenantContext ctx,
+        TeamsMessageAnalysisRequest request,
+        CancellationToken ct = default);
 }

@@ -2,7 +2,7 @@
 
 Mono-Repo für den **Customer Communication Copilot** – eine Lösung, die externe Kundenkommunikation (E-Mail, Teams, Meetings, Dokumente) erfasst, an Microsoft Dynamics 365 Business Central anbindet und Benutzer mit *Grounded AI* aktiv bei der Bearbeitung unterstützt. **Keine automatischen ausgehenden Nachrichten** – alle Vorschläge sind freigabepflichtig.
 
-> Status: **MVP1 Sprint 0** – Repo-Scaffolding. Funktionalität folgt ab Sprint 1.
+> Status: **MVP2 Kickoff** – MVP1-Baseline ist umgesetzt und gepusht. Teams-Workstream (Bot/ME/Tab + Backend-Teams-API) wird jetzt fortgeführt.
 
 ## Komponenten (Übersicht)
 

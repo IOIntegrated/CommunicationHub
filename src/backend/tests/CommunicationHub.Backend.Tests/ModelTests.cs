@@ -28,6 +28,13 @@ public sealed class ModelTests
     }
 
     [Fact]
+    public void InteractionSaveRequest_SourceChannel_DefaultsToEmail()
+    {
+        var req = new InteractionSaveRequest { MessageId = "msg-1" };
+        req.SourceChannel.Should().Be("Email");
+    }
+
+    [Fact]
     public void MailAnalysisRequest_StreamResponse_DefaultsFalse()
     {
         var req = new MailAnalysisRequest { MessageId = "msg-1" };
@@ -39,6 +46,20 @@ public sealed class ModelTests
     {
         var req = new MailAnalysisRequest { MessageId = "msg-1" };
         req.IncludeSuggestions.Should().BeTrue();
+    }
+
+    [Fact]
+    public void TeamsMessageAnalysisRequest_IncludeSuggestions_DefaultsTrue()
+    {
+        var req = new TeamsMessageAnalysisRequest
+        {
+            ChatId = "chat-1",
+            MessageId = "msg-1",
+            MessageText = "hello"
+        };
+
+        req.IncludeSuggestions.Should().BeTrue();
+        req.StreamResponse.Should().BeFalse();
     }
 
     [Fact]

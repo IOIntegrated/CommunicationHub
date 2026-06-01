@@ -127,6 +127,7 @@ try
     // ── Route groups ──────────────────────────────────────────────────────────
     app.MapHealthEndpoints();
     app.MapMailEndpoints();
+    app.MapTeamsEndpoints();
     app.MapInteractionEndpoints();
     app.MapContextEndpoints();
     app.MapFeedbackEndpoints();

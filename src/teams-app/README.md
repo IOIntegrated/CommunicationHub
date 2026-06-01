@@ -28,7 +28,9 @@ extension/         Message Extension Spezifika (falls separat)
 
 ## MVP2
 
-- RSC-Manifest (`ChannelMessage.Read.Group`) für Pilot-Teams.
-- Bot mit Adaptive Cards (Server-seitige Re-Authorization vor jeder Card-Ausgabe, [12-security §1.2](../../docs/plan/12-security-compliance.md)).
-- ME: Thread analysieren, Antwortentwurf einfügen, in BC-Timeline ablegen.
-- Tab: Kunden-/Projekt-Arbeitsbereich (Timeline, Themenansicht, Dokumente).
+- [ ] RSC-Manifest (`ChannelMessage.Read.Group`) für Pilot-Teams.
+- [ ] Bot mit Adaptive Cards (Server-seitige Re-Authorization vor jeder Card-Ausgabe, [12-security §1.2](../../docs/plan/12-security-compliance.md)).
+- [x] Backend-API für Teams Message Analysis angelegt (`POST /v1/teams/message/analyze`) als MVP2-Einstieg.
+- [x] Backend-API für Teams Message Extension Preview angelegt (`POST /v1/teams/message/preview-interaction`) inkl. vorgeschlagenem `InteractionSaveRequest`.
+- [ ] ME: Thread analysieren, Antwortentwurf einfügen, in BC-Timeline ablegen.
+- [ ] Tab: Kunden-/Projekt-Arbeitsbereich (Timeline, Themenansicht, Dokumente).

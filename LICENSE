@@ -1,8 +1,21 @@
-TODO – Lizenzwahl offen (Sprint 0).
+MIT License
 
-Diese Datei ist ein Platzhalter. Die endgültige Lizenz (z. B. proprietär,
-MIT, Apache-2.0 oder eine kombinierte ISV-Lizenz für den
-Customer Communication Copilot) wird vor dem ersten externen Release
-festgelegt und durch den vollständigen Lizenztext ersetzt.
+Copyright (c) 2026 IOIntegrated
 
-Bis dahin gilt: Alle Rechte vorbehalten.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
