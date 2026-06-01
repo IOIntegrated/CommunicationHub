@@ -161,9 +161,14 @@ public sealed partial class CopilotOrchestrator(
         }
 
         var classification = await RunClassificationAsync(kernel, teamsMessage, ct);
+        var hasExternalParticipation = TeamsExternalEvaluator.HasExternalParticipation(
+            ctx.MailboxUpn,
+            request.SenderUpn,
+            request.ParticipantUpns);
+
         classification = new ClassificationResult
         {
-            IsExternal = classification.IsExternal,
+            IsExternal = hasExternalParticipation,
             Confidence = classification.Confidence,
             Sensitivity = classification.Sensitivity,
             Channel = "Teams",
