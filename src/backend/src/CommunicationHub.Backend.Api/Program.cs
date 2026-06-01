@@ -133,6 +133,7 @@ try
     app.MapInteractionEndpoints();
     app.MapContextEndpoints();
     app.MapFeedbackEndpoints();
+    app.MapComplianceEndpoints();
 
     app.Run();
 }
