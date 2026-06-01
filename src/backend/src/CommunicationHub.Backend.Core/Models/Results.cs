@@ -80,6 +80,7 @@ public sealed class SourceReference
     public required string Title { get; init; }
     public string? Excerpt { get; init; }
     public string SourceType { get; init; } = "Email";
+    public DateTimeOffset CapturedAtUtc { get; init; } = DateTimeOffset.UtcNow;
 }
 
 public sealed class AuditInfo

@@ -72,6 +72,7 @@ public sealed partial class AiSearchClient(
                 Title = result.Document.TryGetValue("title", out var title) ? title?.ToString() ?? string.Empty : string.Empty,
                 Excerpt = result.Document.TryGetValue("excerpt", out var excerpt) ? excerpt?.ToString() : null,
                 SourceType = result.Document.TryGetValue("source_type", out var st) ? st?.ToString() ?? "Email" : "Email",
+                CapturedAtUtc = TryReadCapturedAt(result.Document),
             });
         }
 
@@ -80,6 +81,23 @@ public sealed partial class AiSearchClient(
 
     private static string EscapeODataString(string value) =>
         value.Replace("'", "''", StringComparison.Ordinal);
+
+    private static DateTimeOffset TryReadCapturedAt(SearchDocument document)
+    {
+        if (!document.TryGetValue("captured_at_utc", out var rawValue) || rawValue is null)
+            return DateTimeOffset.UtcNow;
+
+        if (rawValue is DateTimeOffset dto)
+            return dto;
+
+        if (rawValue is DateTime dt)
+            return new DateTimeOffset(dt.ToUniversalTime());
+
+        if (DateTimeOffset.TryParse(rawValue.ToString(), out var parsed))
+            return parsed.ToUniversalTime();
+
+        return DateTimeOffset.UtcNow;
+    }
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "AI Search: index={Index} query={Query} tenant={TenantId}")]
     private static partial void LogSearch(ILogger logger, string index, string query, string tenantId);

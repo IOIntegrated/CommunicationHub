@@ -86,6 +86,7 @@ public sealed partial class CopilotOrchestrator(
         // ── Step 6: retrieve context from Search ──────────────────────────────
         var searchQuery = $"{mail.Subject} {mail.SenderEmail}";
         var sources = await searchClient.SearchInteractionsAsync(ctx, searchQuery, topK: 8, ct);
+        sources = EnsureMinimumSourceCoverage(sources, request.MessageId, mail.Subject, "Email");
 
         // ── Step 7: C2 – extract ──────────────────────────────────────────────
         var extraction = await RunExtractionAsync(kernel, mail, ct);
@@ -179,6 +180,7 @@ public sealed partial class CopilotOrchestrator(
             $"{request.ChatId} {request.MessageText}",
             topK: 8,
             ct);
+        sources = EnsureMinimumSourceCoverage(sources, request.MessageId, $"Teams message {request.ChatId}", "Teams");
 
         var extraction = await RunExtractionAsync(kernel, teamsMessage, ct);
 
@@ -234,6 +236,27 @@ public sealed partial class CopilotOrchestrator(
 
     private static bool ContainsInjectionMarkers(string text) =>
         InjectionMarkers.Any(m => text.Contains(m, StringComparison.OrdinalIgnoreCase));
+
+    private static List<SourceReference> EnsureMinimumSourceCoverage(
+        List<SourceReference> sources,
+        string sourceId,
+        string? title,
+        string sourceType)
+    {
+        if (sources.Count > 0)
+            return sources;
+
+        return
+        [
+            new SourceReference
+            {
+                Id = sourceId,
+                Title = string.IsNullOrWhiteSpace(title) ? sourceId : title,
+                SourceType = sourceType,
+                CapturedAtUtc = DateTimeOffset.UtcNow,
+            }
+        ];
+    }
 
     // ── C1: Classification ────────────────────────────────────────────────────
 

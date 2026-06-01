@@ -75,4 +75,18 @@ public sealed class ModelTests
         result.Sources.Should().NotBeNull().And.BeEmpty();
         result.PromptInjectionWarning.Should().BeFalse();
     }
+
+    [Fact]
+    public void SourceReference_CapturedAtUtc_DefaultsToCurrentTime()
+    {
+        var before = DateTimeOffset.UtcNow.AddSeconds(-2);
+
+        var source = new SourceReference
+        {
+            Id = "src-1",
+            Title = "Mail",
+        };
+
+        source.CapturedAtUtc.Should().BeOnOrAfter(before);
+    }
 }
