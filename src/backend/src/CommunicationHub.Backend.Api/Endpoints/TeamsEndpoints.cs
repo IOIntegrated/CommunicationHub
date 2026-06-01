@@ -29,6 +29,7 @@ public static class TeamsEndpoints
         HttpContext ctx,
         ICopilotOrchestrator orchestrator,
         IPermissionResolver permissions,
+        IBcApiClient bcClient,
         CancellationToken ct)
     {
         var validationError = ValidateMessageRequest(request.ChatId, request.MessageId, request.MessageText);
@@ -39,15 +40,20 @@ public static class TeamsEndpoints
 
         var allowed = await permissions.CanTriggerAiAsync(tenantCtx, "Teams", request.MessageId, ct);
         if (!allowed)
+        {
+            await SafeAuditAsync(bcClient, tenantCtx, "permission.denied", "teams analyze denied", ct);
             return Results.Json(new { error = "permission_denied" }, statusCode: StatusCodes.Status403Forbidden);
+        }
 
         try
         {
             var result = await orchestrator.AnalyzeTeamsMessageAsync(tenantCtx, request, ct);
+            await SafeAuditAsync(bcClient, tenantCtx, "teams.analysis.completed", request.MessageId, ct);
             return Results.Ok(result);
         }
         catch (UnauthorizedAccessException ex)
         {
+            await SafeAuditAsync(bcClient, tenantCtx, "permission.denied", ex.Message, ct);
             return Results.Json(new { error = "permission_denied", detail = ex.Message },
                 statusCode: StatusCodes.Status403Forbidden);
         }
@@ -69,7 +75,10 @@ public static class TeamsEndpoints
 
         var allowed = await permissions.CanTriggerAiAsync(tenantCtx, "Teams", request.MessageId, ct);
         if (!allowed)
+        {
+            await SafeAuditAsync(bcClient, tenantCtx, "permission.denied", "teams preview denied", ct);
             return Results.Json(new { error = "permission_denied" }, statusCode: StatusCodes.Status403Forbidden);
+        }
 
         var analysis = await orchestrator.AnalyzeTeamsMessageAsync(
             tenantCtx,
@@ -125,6 +134,8 @@ public static class TeamsEndpoints
             },
         };
 
+        await SafeAuditAsync(bcClient, tenantCtx, "teams.preview.generated", request.MessageId, ct);
+
         return Results.Ok(preview);
     }
 
@@ -140,5 +151,22 @@ public static class TeamsEndpoints
             return Results.BadRequest(new { error = "message_text_required" });
 
         return null;
+    }
+
+    private static async Task SafeAuditAsync(
+        IBcApiClient bcClient,
+        TenantContext ctx,
+        string eventType,
+        string message,
+        CancellationToken ct)
+    {
+        try
+        {
+            await bcClient.WriteAuditEventAsync(ctx, eventType, message, ct);
+        }
+        catch
+        {
+            // Audit failures must not block user-facing operations.
+        }
     }
 }

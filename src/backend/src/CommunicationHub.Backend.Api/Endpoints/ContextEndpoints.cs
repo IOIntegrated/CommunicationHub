@@ -35,7 +35,10 @@ public static class ContextEndpoints
 
         var canView = await permissions.CanViewCustomerContextAsync(tenantCtx, customerNo, ct);
         if (!canView)
+        {
+            await SafeAuditAsync(bcClient, tenantCtx, "permission.denied", $"context customer={customerNo}", ct);
             return Results.Json(new { error = "permission_denied" }, statusCode: StatusCodes.Status403Forbidden);
+        }
 
         // Fetch BC context and recent interactions from Search in parallel.
         var bcContextTask = bcClient.GetCustomerContextAsync(tenantCtx, customerNo, ct);
@@ -58,6 +61,25 @@ public static class ContextEndpoints
             AiSummary = canViewSummary ? bcCtx.AiSummary : null,
         };
 
+        await SafeAuditAsync(bcClient, tenantCtx, "context.viewed", customerNo, ct);
+
         return Results.Ok(merged);
+    }
+
+    private static async Task SafeAuditAsync(
+        IBcApiClient bcClient,
+        CommunicationHub.Backend.Core.Models.TenantContext ctx,
+        string eventType,
+        string message,
+        CancellationToken ct)
+    {
+        try
+        {
+            await bcClient.WriteAuditEventAsync(ctx, eventType, message, ct);
+        }
+        catch
+        {
+            // Audit failures must not block user-facing operations.
+        }
     }
 }

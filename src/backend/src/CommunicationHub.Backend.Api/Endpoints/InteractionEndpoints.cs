@@ -43,10 +43,14 @@ public static class InteractionEndpoints
         var idempotencyKey = BuildIdempotencyKey(tenantCtx, request);
 
         if (idempotency.TryGet(idempotencyKey, out var existing))
+        {
+            await SafeAuditAsync(bcClient, tenantCtx, "interaction.duplicate", request.MessageId, ct);
             return Results.Ok(new { duplicate = true, existing.InteractionId, existing.BcEntryNo });
+        }
 
         var result = await bcClient.SaveInteractionAsync(tenantCtx, request, ct);
         idempotency.Store(idempotencyKey, result);
+        await SafeAuditAsync(bcClient, tenantCtx, "interaction.persisted", request.MessageId, ct);
         return Results.Created($"/v1/interactions/{result.BcEntryNo}", result);
     }
 
@@ -59,5 +63,22 @@ public static class InteractionEndpoints
             request.SourceChannel,
             request.MessageId,
             chatPart);
+    }
+
+    private static async Task SafeAuditAsync(
+        IBcApiClient bcClient,
+        TenantContext ctx,
+        string eventType,
+        string message,
+        CancellationToken ct)
+    {
+        try
+        {
+            await bcClient.WriteAuditEventAsync(ctx, eventType, message, ct);
+        }
+        catch
+        {
+            // Audit failures must not block user-facing operations.
+        }
     }
 }
