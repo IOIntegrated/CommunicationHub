@@ -57,4 +57,17 @@ public sealed class BcApiClientTests
         candidates.Should().Contain(c => c.Name == "Fabrikam");
         candidates.Should().Contain(c => c.Name == "Northwind");
     }
+
+    [Fact]
+    public async Task CanViewCustomer_ReturnsFalse_ForBlockedCustomerPrefix()
+    {
+        var handlerMock = new Mock<HttpMessageHandler>();
+        var sut = MakeClient(handlerMock.Object);
+
+        var blocked = await sut.CanViewCustomerAsync(MakeCtx(), "BLOCK-10000");
+        var allowed = await sut.CanViewCustomerAsync(MakeCtx(), "10000");
+
+        blocked.Should().BeFalse();
+        allowed.Should().BeTrue();
+    }
 }

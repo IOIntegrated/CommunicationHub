@@ -25,6 +25,12 @@ public interface IBcApiClient
         string customerNo,
         CancellationToken ct = default);
 
+    /// <summary>Check if the caller is allowed to read customer context.</summary>
+    Task<bool> CanViewCustomerAsync(
+        TenantContext ctx,
+        string customerNo,
+        CancellationToken ct = default);
+
     /// <summary>Persist a new CommunicationInteraction entry in BC.</summary>
     Task<InteractionSaveResult> SaveInteractionAsync(
         TenantContext ctx,

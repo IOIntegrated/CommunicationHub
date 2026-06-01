@@ -73,4 +73,22 @@ public sealed class PermissionResolverTests
         result.Should().BeTrue();
         bcMock.Verify(c => c.CheckConsentAsync(It.IsAny<TenantContext>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
     }
+
+    [Fact]
+    public async Task CanViewCustomerContext_DelegatesToBcPermissionCheck()
+    {
+        var bcMock = new Mock<IBcApiClient>();
+        bcMock.Setup(c => c.CanViewCustomerAsync(It.IsAny<TenantContext>(), "10000", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        bcMock.Setup(c => c.CanViewCustomerAsync(It.IsAny<TenantContext>(), "BLOCK-1", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+
+        var sut = new PermissionResolver(bcMock.Object, NullLogger<PermissionResolver>.Instance);
+
+        var allowed = await sut.CanViewCustomerContextAsync(MakeCtx(), "10000");
+        var blocked = await sut.CanViewCustomerContextAsync(MakeCtx(), "BLOCK-1");
+
+        allowed.Should().BeTrue();
+        blocked.Should().BeFalse();
+    }
 }

@@ -1,4 +1,5 @@
 using CommunicationHub.Backend.Api.Middleware;
+using CommunicationHub.Backend.Core.Auth;
 using CommunicationHub.Backend.Core.BC;
 using CommunicationHub.Backend.Core.Search;
 
@@ -22,6 +23,7 @@ public static class ContextEndpoints
     private static async Task<IResult> GetCustomerContextAsync(
         string customerNo,
         HttpContext ctx,
+        IPermissionResolver permissions,
         IBcApiClient bcClient,
         ISearchClient searchClient,
         CancellationToken ct)
@@ -30,6 +32,10 @@ public static class ContextEndpoints
             return Results.BadRequest(new { error = "customer_no_required" });
 
         var tenantCtx = ctx.RequireTenantContext();
+
+        var canView = await permissions.CanViewCustomerContextAsync(tenantCtx, customerNo, ct);
+        if (!canView)
+            return Results.Json(new { error = "permission_denied" }, statusCode: StatusCodes.Status403Forbidden);
 
         // Fetch BC context and recent interactions from Search in parallel.
         var bcContextTask = bcClient.GetCustomerContextAsync(tenantCtx, customerNo, ct);

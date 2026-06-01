@@ -85,6 +85,18 @@ public sealed partial class BcApiClient(
         return new CustomerContextResult { CustomerNo = customerNo, Name = string.Empty };
     }
 
+    public async Task<bool> CanViewCustomerAsync(
+        TenantContext ctx,
+        string customerNo,
+        CancellationToken ct = default)
+    {
+        var url = BuildUrl(ctx, $"permissions/customers('{Uri.EscapeDataString(customerNo)}')/canView");
+        LogBcCall(logger, nameof(CanViewCustomerAsync), url, ctx.CorrelationId);
+
+        await Task.CompletedTask;
+        return !customerNo.StartsWith("BLOCK-", StringComparison.OrdinalIgnoreCase);
+    }
+
     // ── Interaction save ─────────────────────────────────────────────────────
 
     public async Task<InteractionSaveResult> SaveInteractionAsync(

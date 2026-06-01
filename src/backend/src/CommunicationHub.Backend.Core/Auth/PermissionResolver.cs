@@ -18,6 +18,11 @@ public interface IPermissionResolver
         string resourceType,
         string resourceId,
         CancellationToken ct = default);
+
+    Task<bool> CanViewCustomerContextAsync(
+        TenantContext ctx,
+        string customerNo,
+        CancellationToken ct = default);
 }
 
 /// <summary>Default implementation that checks BC consent and user role claims.</summary>
@@ -49,6 +54,12 @@ public sealed partial class PermissionResolver(
 
         return true;
     }
+
+    public Task<bool> CanViewCustomerContextAsync(
+        TenantContext ctx,
+        string customerNo,
+        CancellationToken ct = default) =>
+        bcClient.CanViewCustomerAsync(ctx, customerNo, ct);
 
     [Microsoft.Extensions.Logging.LoggerMessage(
         Level = Microsoft.Extensions.Logging.LogLevel.Warning,
