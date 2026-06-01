@@ -45,6 +45,7 @@ public static class ContextEndpoints
 
         var bcCtx = bcContextTask.Result;
         var searchResults = searchTask.Result;
+        var canViewSummary = await permissions.CanViewAiSummaryAsync(tenantCtx, customerNo, ct);
 
         // Merge search results into the BC context (class has no `with` — build a new instance).
         var merged = new CommunicationHub.Backend.Core.Models.CustomerContextResult
@@ -54,7 +55,7 @@ public static class ContextEndpoints
             RecentInteractions = [.. bcCtx.RecentInteractions, .. searchResults],
             RecentDocuments = bcCtx.RecentDocuments,
             OpenActionItems = bcCtx.OpenActionItems,
-            AiSummary = bcCtx.AiSummary,
+            AiSummary = canViewSummary ? bcCtx.AiSummary : null,
         };
 
         return Results.Ok(merged);

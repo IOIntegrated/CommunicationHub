@@ -91,4 +91,36 @@ public sealed class PermissionResolverTests
         allowed.Should().BeTrue();
         blocked.Should().BeFalse();
     }
+
+    [Fact]
+    public async Task CanViewAiSummary_ReturnsFalse_WhenConsentIsMissing()
+    {
+        var bcMock = new Mock<IBcApiClient>();
+        bcMock.Setup(c => c.CanViewCustomerAsync(It.IsAny<TenantContext>(), "10000", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        bcMock.Setup(c => c.CheckConsentAsync(It.IsAny<TenantContext>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+
+        var sut = new PermissionResolver(bcMock.Object, NullLogger<PermissionResolver>.Instance);
+
+        var result = await sut.CanViewAiSummaryAsync(MakeCtx(), "10000");
+
+        result.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task CanViewAiSummary_ReturnsTrue_WhenCustomerVisibleAndConsentGranted()
+    {
+        var bcMock = new Mock<IBcApiClient>();
+        bcMock.Setup(c => c.CanViewCustomerAsync(It.IsAny<TenantContext>(), "10000", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        bcMock.Setup(c => c.CheckConsentAsync(It.IsAny<TenantContext>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        var sut = new PermissionResolver(bcMock.Object, NullLogger<PermissionResolver>.Instance);
+
+        var result = await sut.CanViewAiSummaryAsync(MakeCtx(), "10000");
+
+        result.Should().BeTrue();
+    }
 }
