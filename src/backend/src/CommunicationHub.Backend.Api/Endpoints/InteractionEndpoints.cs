@@ -1,4 +1,5 @@
 using CommunicationHub.Backend.Api.Middleware;
+using CommunicationHub.Backend.Api.Services;
 using CommunicationHub.Backend.Core.BC;
 using CommunicationHub.Backend.Core.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ public static class InteractionEndpoints
         [FromBody] InteractionSaveRequest request,
         HttpContext ctx,
         IBcApiClient bcClient,
+        IInteractionIdempotencyStore idempotency,
         CancellationToken ct)
     {
         // UserConfirmed must be explicitly true — prevents accidental saves.
@@ -38,8 +40,24 @@ public static class InteractionEndpoints
         }
 
         var tenantCtx = ctx.RequireTenantContext();
+        var idempotencyKey = BuildIdempotencyKey(tenantCtx, request);
+
+        if (idempotency.TryGet(idempotencyKey, out var existing))
+            return Results.Ok(new { duplicate = true, existing.InteractionId, existing.BcEntryNo });
 
         var result = await bcClient.SaveInteractionAsync(tenantCtx, request, ct);
+        idempotency.Store(idempotencyKey, result);
         return Results.Created($"/v1/interactions/{result.BcEntryNo}", result);
+    }
+
+    private static string BuildIdempotencyKey(TenantContext tenantCtx, InteractionSaveRequest request)
+    {
+        var chatPart = request.ChatId ?? string.Empty;
+        return string.Join('|',
+            tenantCtx.TenantId,
+            tenantCtx.BcCompanyId,
+            request.SourceChannel,
+            request.MessageId,
+            chatPart);
     }
 }

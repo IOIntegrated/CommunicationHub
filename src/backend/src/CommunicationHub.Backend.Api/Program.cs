@@ -1,6 +1,7 @@
 using Azure.Identity;
 using CommunicationHub.Backend.Api.Endpoints;
 using CommunicationHub.Backend.Api.Middleware;
+using CommunicationHub.Backend.Api.Services;
 using CommunicationHub.Backend.Core.AI;
 using CommunicationHub.Backend.Core.Auth;
 using CommunicationHub.Backend.Core.BC;
@@ -50,6 +51,7 @@ try
 
     // ── Application Insights ─────────────────────────────────────────────────
     builder.Services.AddApplicationInsightsTelemetry();
+    builder.Services.AddSingleton<IInteractionIdempotencyStore, InMemoryInteractionIdempotencyStore>();
 
     // ── Rate limiting (60 req/min per user, OWASP A04) ───────────────────────
     builder.Services.AddRateLimiter(opts =>
