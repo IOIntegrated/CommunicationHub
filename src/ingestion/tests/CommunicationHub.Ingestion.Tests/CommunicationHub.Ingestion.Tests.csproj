@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\CommunicationHub.Ingestion.Core\CommunicationHub.Ingestion.Core.csproj" />
-    <ProjectReference Include="..\..\..\src\CommunicationHub.Ingestion.Functions\CommunicationHub.Ingestion.Functions.csproj" />
+    <ProjectReference Include="..\..\src\CommunicationHub.Ingestion.Core\CommunicationHub.Ingestion.Core.csproj" />
+    <ProjectReference Include="..\..\src\CommunicationHub.Ingestion.Functions\CommunicationHub.Ingestion.Functions.csproj" />
   </ItemGroup>
 </Project>
