@@ -1,0 +1,66 @@
+# Capability Definition – C2: Structured Extraction
+# Sprint 0, G3 – Prompt Repository
+# See: docs/plan/08-ai-orchestration.md §3
+
+id: c2-extract
+version: "0.1.0"
+description: >
+  Extracts structured metadata from a communication: participants (with BC match hints),
+  action items with due-date hints, topic labels, and referenced dates.
+  Output feeds Stage 7 (BC match scoring) and Stage 9 (action-item persistence).
+
+model:
+  deployment: "${EVAL_MODEL_DEPLOYMENT:-gpt-4.1-eu}"
+  api_version: "2024-12-01-preview"
+  temperature: 0
+  max_tokens: 800
+  response_format: json_object
+
+system_prompt_file: "../../prompts/system/extraction.md"
+
+input_schema:
+  type: object
+  required: [subject, body_snippet]
+  properties:
+    subject:
+      type: string
+      maxLength: 250
+    body_snippet:
+      type: string
+      maxLength: 2000
+      description: "Redacted body snippet – PII may be present; handle with care."
+    participants_raw:
+      type: array
+      items:
+        type: object
+        properties:
+          display_name: { type: string }
+          email:        { type: string }
+          role:         { type: string }
+
+output_schema:
+  type: object
+  properties:
+    participants:
+      type: array
+      items:
+        type: object
+        required: [role, is_external]
+    action_items:
+      type: array
+      items:
+        type: object
+        required: [description, confidence]
+    topics:
+      type: array
+      items:
+        type: object
+        required: [label, confidence]
+    dates_mentioned:
+      type: array
+      items: { type: string, format: date }
+
+eval:
+  goldlabel_file: "../../datasets/goldlabel-c2.jsonl"
+  thresholds:
+    field_f1: 0.85

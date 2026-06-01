@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    CommunicationHub.Ingestion.Functions – Sprint 0 Skeleton (I4)
+    Azure Functions v4 isolated worker host for the ingestion pipeline.
+    See: docs/plan/07-ingestion-pipeline.md, docs/plan/18-sprint-0-backlog.md §I4
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>CommunicationHub.Ingestion.Functions</RootNamespace>
+    <AssemblyName>CommunicationHub.Ingestion.Functions</AssemblyName>
+    <!--
+      AzureFunctionsVersion must be v4 for .NET 8 isolated worker.
+      Extension bundle version is pinned in host.json (see src/ingestion/host.json).
+    -->
+    <AzureFunctionsVersion>v4</AzureFunctionsVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.Functions.Worker"                       Version="2.0.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Timer"      Version="4.3.1" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.ServiceBus" Version="5.22.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk"                   Version="2.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.ApplicationInsights.WorkerService"            Version="2.22.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.ApplicationInsights"   Version="2.0.0" />
+    <PackageReference Include="Azure.Identity"                                          Version="1.13.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\CommunicationHub.Ingestion.Core\CommunicationHub.Ingestion.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      Ensure host.json and local.settings.json are copied to the output directory
+      so the Functions runtime can find them.
+    -->
+    <None Update="..\..\..\..\host.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="local.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+</Project>

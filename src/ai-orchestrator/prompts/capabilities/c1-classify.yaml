@@ -1,0 +1,60 @@
+# Capability Definition – C1: Communication Classification
+# Sprint 0, G3 – Prompt Repository
+# See: docs/plan/08-ai-orchestration.md §2
+
+id: c1-classify
+version: "0.1.0"
+description: >
+  Classifies a communication as external/internal, determines the channel type,
+  and assigns a sensitivity level. Output feeds Stage 2 and 3 of the ingestion
+  pipeline (docs/plan/07-ingestion-pipeline.md §4).
+
+model:
+  deployment: "${EVAL_MODEL_DEPLOYMENT:-gpt-4.1-eu}"
+  api_version: "2024-12-01-preview"
+  temperature: 0
+  max_tokens: 256
+  response_format: json_object
+
+system_prompt_file: "../../prompts/system/classification.md"
+
+input_schema:
+  type: object
+  required: [subject, participants]
+  properties:
+    subject:
+      type: string
+      maxLength: 250
+    snippet:
+      type: string
+      maxLength: 500
+    participants:
+      type: array
+      items:
+        type: object
+        properties:
+          email: { type: string }
+          role:  { type: string }
+    internal_domains:
+      type: array
+      items: { type: string }
+      description: "Domains to treat as internal (from Communication Internal Domain table)."
+
+output_schema:
+  type: object
+  required: [is_external, channel, sensitivity, confidence]
+  properties:
+    is_external:   { type: boolean }
+    channel:
+      type: string
+      enum: [Email, "Teams Chat", "Teams Channel", "Teams Meeting", Manual, Other]
+    sensitivity:
+      type: string
+      enum: [Public, Internal, Confidential, "Strictly Confidential", Restricted]
+    confidence:    { type: number, minimum: 0, maximum: 1 }
+    reason:        { type: string, maxLength: 120 }
+
+eval:
+  goldlabel_file: "../../datasets/goldlabel-c1.jsonl"
+  thresholds:
+    accuracy: 0.90

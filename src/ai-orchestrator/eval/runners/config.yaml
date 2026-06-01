@@ -1,0 +1,26 @@
+# Evaluation runner configuration – Sprint 0 skeleton (G2)
+# Override any value with environment variables or CLI flags.
+
+azure_openai:
+  endpoint: "${AZURE_OPENAI_ENDPOINT}"
+  api_version: "2024-12-01-preview"
+  # key: leave empty to use Managed Identity / DefaultAzureCredential
+
+models:
+  default_eval_deployment: "gpt-4.1-eu"
+  embedding_deployment: "text-embedding-3-large-eu"
+
+thresholds:
+  c1_accuracy: 0.90           # Classification precision/recall
+  c3_groundedness: 0.85       # Reply grounded in provided sources
+  c3_citation_coverage: 0.80  # Fraction of citations matching ground truth
+  c2_field_f1: 0.85           # Extraction field-level F1
+  c4_rouge2: 0.30             # Summary ROUGE-2 recall
+
+dataset_dir: "../datasets"
+adversarial_dir: "../adversarial"
+results_dir: "../results"
+
+logging:
+  level: INFO
+  format: "%(asctime)s [%(levelname)s] %(name)s – %(message)s"

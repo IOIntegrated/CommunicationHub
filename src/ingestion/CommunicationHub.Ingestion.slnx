@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CommunicationHub.Ingestion.Core/CommunicationHub.Ingestion.Core.csproj" />
+    <Project Path="src/CommunicationHub.Ingestion.Functions/CommunicationHub.Ingestion.Functions.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CommunicationHub.Ingestion.Tests/CommunicationHub.Ingestion.Tests.csproj" />
+  </Folder>
+</Solution>

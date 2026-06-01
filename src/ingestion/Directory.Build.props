@@ -1,10 +1,11 @@
 <Project>
   <!--
-    Skelett – wird in Sprint 1 ausgebaut. Globale MSBuild-Einstellungen für
-    alle .NET-Projekte unter src/backend.
+    Globale MSBuild-Einstellungen für alle .NET-Projekte unter src/ingestion.
+    Spiegelt src/backend/Directory.Build.props – Sprint 0 Skeleton.
+    Wird in Sprint 1 um Versionierung (MinVer), Source Link und Symbol-Packages ergänzt.
   -->
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>

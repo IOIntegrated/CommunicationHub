@@ -1,7 +1,6 @@
 {
-  "//": "Skelett – pinned .NET 8 SDK. TODO Sprint 1: konkrete Patch-Version festziehen (z. B. 8.0.404).",
   "sdk": {
-    "version": "8.0.0",
+    "version": "10.0.0",
     "rollForward": "latestFeature",
     "allowPrerelease": false
   }

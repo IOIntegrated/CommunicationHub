@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CommunicationHub.Backend.Api/CommunicationHub.Backend.Api.csproj" />
+    <Project Path="src/CommunicationHub.Backend.Core/CommunicationHub.Backend.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CommunicationHub.Backend.Tests/CommunicationHub.Backend.Tests.csproj" />
+  </Folder>
+</Solution>

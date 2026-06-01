@@ -16,6 +16,12 @@
   "application": "24.0.0.0",
   "idRanges": [
     {
+      "//": "Pilot-Phase range (internal, before AppSource submission – see docs/plan/02-bc-data-model.md §2)",
+      "from": 50000,
+      "to": 50099
+    },
+    {
+      "//": "AppSource range (registered, placeholder until F2 App-ID-Range-Antrag is confirmed)",
       "from": 72359624,
       "to": 72359674
     }

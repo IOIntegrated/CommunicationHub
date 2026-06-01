@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    CommunicationHub.Ingestion.Core – Sprint 0 Skeleton (I4)
+    Shared models and interfaces for the ingestion pipeline.
+    See: docs/plan/07-ingestion-pipeline.md, docs/plan/22-high-water-mark.md
+  -->
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <RootNamespace>CommunicationHub.Ingestion.Core</RootNamespace>
+    <AssemblyName>CommunicationHub.Ingestion.Core</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Identity"          Version="1.13.2" />
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.18.4" />
+    <PackageReference Include="Azure.Data.Tables"       Version="12.9.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+  </ItemGroup>
+</Project>

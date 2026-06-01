@@ -1,0 +1,27 @@
+# Communication Copilot – Evaluation Runner Dependencies
+# Sprint 0, WS-G Task G2
+# Pin minor versions; patch versions float for security updates.
+
+# Azure AI & OpenAI
+azure-ai-evaluation>=1.0.0,<2.0.0
+azure-identity>=1.17.0,<2.0.0
+openai>=1.30.0,<2.0.0
+
+# Azure storage (for loading datasets from Blob when needed)
+azure-storage-blob>=12.20.0,<13.0.0
+
+# Data processing
+pandas>=2.2.0,<3.0.0
+numpy>=1.26.0,<2.0.0
+
+# NLP / evaluation metrics
+rouge-score>=0.1.2
+nltk>=3.8.0
+
+# Testing
+pytest>=8.2.0,<9.0.0
+pytest-asyncio>=0.23.0
+
+# Utilities
+python-dotenv>=1.0.0
+pyyaml>=6.0.0

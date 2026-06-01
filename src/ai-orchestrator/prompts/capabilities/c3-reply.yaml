@@ -1,0 +1,76 @@
+# Capability Definition – C3: Reply Suggestion with Citations
+# Sprint 0, G3 – Prompt Repository
+# See: docs/plan/08-ai-orchestration.md §4
+
+id: c3-reply
+version: "0.1.0"
+description: >
+  Generates a professional reply draft grounded exclusively in provided source references.
+  Every factual claim must be backed by a citation (src:// URI). The output is always
+  a DRAFT – never auto-sent. Prompt injection detection is included.
+
+model:
+  deployment: "${EVAL_MODEL_DEPLOYMENT:-gpt-4.1-eu}"
+  api_version: "2024-12-01-preview"
+  temperature: 0.2
+  max_tokens: 600
+  response_format: json_object
+
+system_prompt_file: "../../prompts/system/reply.md"
+
+input_schema:
+  type: object
+  required: [thread_snippet, allowed_sources]
+  properties:
+    thread_snippet:
+      type: string
+      maxLength: 3000
+      description: "Most-recent messages in the thread (newest first)."
+    allowed_sources:
+      type: array
+      maxItems: 20
+      items:
+        type: object
+        required: [id, content_snippet]
+        properties:
+          id:              { type: string }
+          content_snippet: { type: string, maxLength: 500 }
+          source_type:     { type: string }
+    customer_context:
+      type: string
+      maxLength: 500
+      description: "Short CRM context from BC (customer name, open orders, etc.)."
+    tone_hint:
+      type: string
+      enum: [formal, neutral, friendly]
+      default: formal
+
+output_schema:
+  type: object
+  required: [short_reply, citations, contains_commitments]
+  properties:
+    short_reply:              { type: [string, "null"], maxLength: 1000 }
+    long_reply:               { type: [string, "null"] }
+    internal_assessment:      { type: string, maxLength: 500 }
+    citations:
+      type: array
+      items: { type: string }
+    tone:                     { type: string }
+    language:                 { type: string }
+    contains_commitments:     { type: boolean }
+    contains_pricing:         { type: boolean }
+    contains_delivery_dates:  { type: boolean }
+    confidence:               { type: number, minimum: 0, maximum: 1 }
+    prompt_injection_detected: { type: boolean }
+
+safety:
+  output_filter: true
+  prompt_injection_detection: true
+  # If prompt_injection_detected = true in output, the reply is suppressed and
+  # event type "prompt.injection.detected" is written to the Audit Log.
+
+eval:
+  goldlabel_file: "../../datasets/goldlabel-c3.jsonl"
+  thresholds:
+    groundedness: 0.85
+    citation_coverage: 0.80
