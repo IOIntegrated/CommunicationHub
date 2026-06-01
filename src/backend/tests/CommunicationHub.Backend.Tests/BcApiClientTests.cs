@@ -44,14 +44,17 @@ public sealed class BcApiClientTests
     }
 
     [Fact]
-    public async Task SuggestCustomerMatch_ReturnsEmptyList_InCurrentStub()
+    public async Task SuggestCustomerMatch_ReturnsDeterministicExternalCandidates()
     {
         var handlerMock = new Mock<HttpMessageHandler>();
         var sut = MakeClient(handlerMock.Object);
 
         var candidates = await sut.SuggestCustomerMatchAsync(
-            MakeCtx(), "sender@external.com", ["rep@contoso.com"]);
+            MakeCtx(), "sender@fabrikam.com", ["rep@contoso.com", "buyer@northwind.com"]);
 
-        candidates.Should().BeEmpty("stub returns empty until Sprint 1");
+        candidates.Should().NotBeEmpty();
+        candidates.Select(c => c.No).Should().OnlyHaveUniqueItems();
+        candidates.Should().Contain(c => c.Name == "Fabrikam");
+        candidates.Should().Contain(c => c.Name == "Northwind");
     }
 }

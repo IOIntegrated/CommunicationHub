@@ -3,6 +3,8 @@ using System.Text.Json;
 using CommunicationHub.Backend.Core.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace CommunicationHub.Backend.Core.BC;
 
@@ -48,9 +50,24 @@ public sealed partial class BcApiClient(
         var url = BuildUrl(ctx, "matching/suggestCustomer");
         LogBcCall(logger, nameof(SuggestCustomerMatchAsync), url, ctx.CorrelationId);
 
-        // TODO Sprint 1: POST body with sender/recipients, parse response.
         await Task.CompletedTask;
-        return [];
+
+        var mailboxDomain = ExtractDomain(ctx.MailboxUpn);
+        var candidates = new List<CustomerCandidate>();
+
+        AddCandidateFromEmail(candidates, senderEmail, mailboxDomain, "sender_domain");
+
+        foreach (var recipient in recipientEmails)
+        {
+            AddCandidateFromEmail(candidates, recipient, mailboxDomain, "recipient_domain");
+        }
+
+        return candidates
+            .GroupBy(c => c.No, StringComparer.OrdinalIgnoreCase)
+            .Select(g => g.OrderByDescending(c => c.Confidence).First())
+            .OrderByDescending(c => c.Confidence)
+            .Take(5)
+            .ToList();
     }
 
     // ── Context ──────────────────────────────────────────────────────────────
@@ -109,6 +126,53 @@ public sealed partial class BcApiClient(
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "BC API call {Operation} → {Url} (correlation={CorrelationId})")]
     private static partial void LogBcCall(ILogger logger, string operation, string url, string correlationId);
+
+    private static void AddCandidateFromEmail(
+        List<CustomerCandidate> candidates,
+        string? email,
+        string mailboxDomain,
+        string evidence)
+    {
+        var domain = ExtractDomain(email);
+        if (string.IsNullOrWhiteSpace(domain))
+            return;
+
+        if (string.Equals(domain, mailboxDomain, StringComparison.OrdinalIgnoreCase))
+            return;
+
+        candidates.Add(new CustomerCandidate
+        {
+            No = BuildCustomerNo(domain),
+            Name = BuildName(domain),
+            Confidence = 0.71,
+            Evidence = evidence,
+        });
+    }
+
+    private static string BuildCustomerNo(string domain)
+    {
+        var hash = SHA256.HashData(Encoding.UTF8.GetBytes(domain.ToLowerInvariant()));
+        var suffix = Convert.ToHexString(hash.AsSpan(0, 2));
+        return $"CUST-{suffix}";
+    }
+
+    private static string BuildName(string domain)
+    {
+        var root = domain.Split('.', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? domain;
+        return char.ToUpperInvariant(root[0]) + root[1..];
+    }
+
+    private static string ExtractDomain(string? email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            return string.Empty;
+
+        var at = email.LastIndexOf('@');
+        if (at < 0 || at + 1 >= email.Length)
+            return string.Empty;
+
+        return email[(at + 1)..].Trim().ToLowerInvariant();
+    }
 }
 
 /// <summary>Configuration for <see cref="BcApiClient"/>.</summary>
